@@ -1,54 +1,70 @@
+# Software Requirements Specification (SRS)
+## Saimazoom – Distributed Order Management System
 
-# Índice
-1. [Introdución](#introduccion)
-2. [Definición del proyecto](#definicion)
-3. [Conclusiones](#solucion)
-3. [Conclusiones](#conclusiones)
+---
 
+## 1. Introduction
 
-# 1. Introducción
-El objetivo de Saimazoom es el de crear un sistema para la gestión de pedidos online. Este sistema debe incluir a los actores:
-* **Cliente**, que realiza y gestiona pedidos de productos.
-* **Controlador** central, que gestiona todo el proceso.
-* **Robots**, que se encargan de buscar los productos en el almacén y colocarlos en las cintas transportadoras.
-* **Repartidores**, encargados de transportar el producto a la casa del cliente
-* **Admin** encargados de gestionar la base de datos del controlador central
+Saimazoom is a distributed system designed to manage online product orders through coordinated interaction between multiple actors. The system is structured around a centralized controller that manages state transitions and task assignments via message queues.
 
-El sistema debe de gestionar las interacciones entre todos estos actores, para las comunicaciones correspondientes se empleará una cola de mensajes.
+### 1.1 Purpose
 
+The purpose of this document is to define the functional requirements and system architecture of Saimazoom.
 
-# 2. Definición del proyecto
-El sistema Saimazoom, como conjunto, debe gestionar pedidos, en los que los **clientes** pueden solicitar un producto. Una vez recibido un pedido, el **controlador** debe avisar a un **robot**, que mueve dicho producto del almacén a la cinta transportadora. Una vez en la cinta transportadora, el controlador avisa a un **repartidor**, que lleva el producto a la casa del **cliente**. 
-<!-- Las comunicaciones pertinentes entre estos elementos estarán gestionadas por un **controlador** central, que mantiene la comunicación entre los **clientes**, **robots** y **repartidores**. -->
+### 1.2 Actors
 
-## 2.1. Objetivos y funcionalidad
-Los objetivos principales son: 
-* La gestión de los pedidos de los **clientes**, que pueden hacer, ver  y cancelar pedidos.
-* La gestión de los **robots**, que reciben ordenes de de transportar los productos del almacen a la cinta transportadora.
-* La gestión de los **repartidores**, que reparten los productos que hay en la cinta transportadora a la casa de los clientes.
-* La gestión del **controlador** central, que tiene que mantener un control de productos, **clientes**, **robots** y **repartidores**. Tiene que guardar también los pedidos, con sus estados, que dependen de la relación con el resto de actores.
-* La comunicación entre el **controlador** y el resto de actores
+- **Client** – Places and manages product orders.
+- **Central Controller** – Coordinates system workflow and maintains system state.
+- **Robot** – Retrieves products from warehouse storage.
+- **Delivery Agent** – Delivers products to the client.
+- **Administrator** – Manages database and system configuration.
 
-Para cumplir estos objetivos es necesario desarrollar una serie de funcionalidades básicas:
-1. Registro de **Cliente**: registro desde una petición de un **Cliente** con un identificador de **cliente** que tiene que ser único.
-2. Registro de Pedido: registro en la base de datos del **controlador** central con un id de **cliente** y de producto, también le asigna un estado al pedido.
-3. Recepción de pedidos de los **Clientes**: hay que recibir y guardar los pedidos a realizar que están asociados a un **Cliente** y a un producto.
-4. Asignación de trabajo a los **Robots**: hay que asignar a los **robots** las tareas de transporte de productos correspondientes a pedidos.
-5. Asignación de trabajo a los **Repartidores**: hay que asignar a los **repartidores** las tareas de transporte de productos correspondientes a pedidos.
+---
 
-## 2.2. Requisitos
-Nos limitaremos a los requisitos funcionales, estos los podemos dividir en los siguientes apartados:
+## 2. System Description
 
-### 2.2.1. **Lógica de clientes**
-**LoCl1**. Registro en la aplicación en el que se recibe confirmación  
-**LoCl2**. Realizar un pedido, en el que se pide un producto  
-**LoCl3**. Pedir una lista de los pedidos realizados en la que se incluya id del producto correspondiente al pedido y estado del pedido  
-**LoCl4**. Pedir la cancelación de un pedido
+Saimazoom operates as a coordinated distributed system.
 
+### 2.1 Operational Flow
 
+1. A Client submits an order request.
+2. The Controller registers the order and assigns a Robot.
+3. The Robot transports the product to the conveyor system.
+4. The Controller assigns a Delivery Agent.
+5. The product is delivered to the Client.
 
-# 3. Implementación
-*A rellenar*
+All communication between actors is handled via message queues.
 
-# 4. Conclusiones
-*A rellenar*
+---
+
+## 3. Functional Requirements
+
+### 3.1 Client Logic
+
+- **CL1** – Client registration with unique identifier.
+- **CL2** – Order creation specifying product ID.
+- **CL3** – Retrieve list of orders with status information.
+- **CL4** – Cancel an existing order.
+
+### 3.2 Controller Logic
+
+- **CT1** – Register new orders.
+- **CT2** – Maintain order status lifecycle.
+- **CT3** – Assign tasks to Robots.
+- **CT4** – Assign tasks to Delivery Agents.
+- **CT5** – Ensure system state consistency.
+
+---
+
+## 4. Architectural Considerations
+
+- Centralized coordination model
+- Asynchronous communication through message queues
+- State-based order lifecycle management
+- Role-based system separation
+
+---
+
+## 5. Conclusion
+
+This specification defines the structural and functional foundation of a distributed order management system. The design emphasizes modular role separation and coordinated communication via message queues.
